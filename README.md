@@ -2,11 +2,11 @@
 
 
 
-本パッケージは、SCIOLICという名前で、分離可能凸整数整数係数線型制約付き最適化問題(Separatable Convex Inter Optimization with Linear Integer Condition)を解くことができます。具体的には、目的函数$f$が
+本パッケージは、SCIOLICという名前で、分離可能凸整数整数係数線型制約付き整数最適化問題(Separatable Convex Inter Optimization with Linear Integer Condition)を解くことができます。具体的には、目的函数$f$が
 $$
 f(x)=\sum_if(x_i)
 $$
-と書け、各$f$は一変数凸函数であるようなものであって、$l_i,u_i,a_i,b_i,c_id_i$は全て整数であるとして、制約条件が
+と書け、各$f$は一変数凸函数であるようなものであって、各変数$x_i$は整数値をとり、$l_i,u_i,a_i,b_i,c_id_i$は全て整数であるとして、制約条件が
 $$
 \forall i, l_i \leq x_i \leq u_i
 $$
