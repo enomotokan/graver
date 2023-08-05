@@ -87,20 +87,21 @@ def basis_intker(A):
 def graver(basis):
     if verify_input(basis):
         M = basis.copy().astype(np.float32)
-        linear_independent = np.array([])
-        for i in range(M.shape[1]):
-            equal_0 = np.abs(M[:, i]) <= 2**-15
+        linear_independent = np.array([], dtype=np.int32)
+        for i in range(M.shape[0]):
+            equal_0 = np.abs(M[i]) <= 2**-15
             if np.all(equal_0):
-                M[:, i] = np.zeros(M.shape[1])
+                M[i] = np.zeros(M.shape[1])
                 continue
             else:
-                k = np.setdiff1d(np.arange(M.shape[0])[np.logical_not(equal_0)], linear_independent)[0]
-                M[k] /= M[k, i]
-                for j in np.delete(np.arange(M.shape[0]), k):
-                    M[j] -= M[k] * M[j, i]
+                k = np.arange(M.shape[1])[np.logical_not(equal_0)][0]
+                M[i] /= M[i, k]
+                for j in np.delete(np.arange(M.shape[0]), i):
+                    M[j] -= M[i] * M[j, k]
                 linear_independent =np.append(linear_independent, k)
                 if len(linear_independent) == M.shape[0]:
                     break
+
         basis = basis.astype(np.int32)
         projected_basis = basis[:, [i in linear_independent for i in range(basis.shape[1])]]
 
@@ -229,6 +230,7 @@ def graver_original(projected_basis):
             for g in G:
                 C = np.append(C, [g + s], axis=0)
             G = np.append(G, [s], axis=0)
+    print(G)
     
     # 極小元でない元を除く
     G_ = np.empty((0, G.shape[1]), dtype=np.int32)
@@ -251,7 +253,7 @@ def graver_original(projected_basis):
 
 
 if __name__ == "__main__":
-    A = np.array([[2, -1, 0, -3, 2, -2], [2, 3, -2, 1, 2, 3]], dtype=np.int32)
+    A = np.array([[2, -1, 0, -3, 2, -2], [1, 1, -1, 0, 0, 0], [1, 0, 0, 1, -1, 0]], dtype=np.int32)
     basis = basis_intker(A)
     t = time.time()
     proj_lift = graver(basis)
@@ -264,16 +266,3 @@ if __name__ == "__main__":
     print(len(original))
     print(time.time() - t1)
     
-    # for base in original:
-    #     notin_proj_lift = True
-    #     for base_ in proj_lift:
-    #         if np.all(base == base_):
-    #             notin_proj_lift = False
-    #             break
-    #     if notin_proj_lift:    
-    #         print(base)
-
-    # for i in range(len(original)):
-    #     for j in range(i + 1, len(original)):
-    #         if np.all(original[i] == original[j]):
-    #             print(original[i])

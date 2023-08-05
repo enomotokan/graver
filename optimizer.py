@@ -139,6 +139,9 @@ class SCIOLIC():
             print("Welcome to SCIOLIC, a solver for separatable convex integer optimization with linear integer condition")
             print("Created by Enomoto Kan, Oita prefecture, Japan")
             print("Contact: enomotokan@gmail.com\n")
+        if not 0 < self.alpha < 1:
+            print("Error: the value of alpha must be 0 < alpha < 1")
+            self.errored = True
         if self.errored:
             print("Error: definition of the problem has error.")
         else:
