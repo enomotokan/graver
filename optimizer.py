@@ -253,6 +253,8 @@ class SCIOLIC():
                     coef = np.append(coef, f)
                 else:
                     convfunc.append(f)
+
+            # graver 基底の、符号が逆の成分を除いておく
             graver_A_ = np.empty((0, graver_A.shape[1]), dtype=np.int32)
             for base in graver_A:
                 notin_graver_A_ = True
@@ -265,6 +267,7 @@ class SCIOLIC():
                 if notin_graver_A_:
                     graver_A_ = np.append(graver_A_, [base], axis=0)
             graver_A = graver_A_
+
             # 最適解かどうか
             bool_optimal = False
 
@@ -374,8 +377,9 @@ def search_feasible_solution(A, b, max_array, bound, N_variable):
     A_ = A_.astype(np.float32)
     b_ = b_.astype(np.float32)
     for i in range(A_.shape[0]):
-        A_[i] /= np.array([max_array * A.shape[0]], dtype=np.float32)[i]
-        b_[i] /= np.array([max_array * A.shape[0]], dtype=np.float32)[i]
+        A_[i] /= np.array(max_array * A.shape[0], dtype=np.float32)[i]
+        b_[i] /= np.array(max_array * A.shape[0], dtype=np.float32)[i]
+
 
     anneal_A = np.zeros((N_var_anneal, N_var_anneal))
     for i in range(N_var_anneal):
@@ -417,18 +421,27 @@ if __name__ == "__main__":
     # ログ出力するかどうか
     Solver.verbose = True
 
-    Solver.add_variable("x", 3, 5)
-    Solver.add_variable("y", 1, 4)
-    Solver.add_variable("z", -2, 3)
+    Solver.add_variable("x1", 3, 5)
+    Solver.add_variable("x2", 1, 4)
+    Solver.add_variable("x3", 2, 7)
+    Solver.add_variable("x4", 5, 7)
 
     Solver.add_condition(">", 2)
-    Solver.define_coefficient(0, "x", 2)
-    Solver.define_coefficient(0, "y", -1)
-    Solver.define_coefficient(0, "z", -2)
+    Solver.define_coefficient(0, "x1", 5)
+    Solver.define_coefficient(0, "x2", -1)
+    Solver.define_coefficient(0, "x3", 3)
+    Solver.define_coefficient(0, "x4", 2)
 
-    Solver.add_convexfunc("x", 3)
-    Solver.add_convexfunc("y", 4)
-    Solver.add_convexfunc("z", 2)
+    Solver.add_condition("<=", 2)
+    Solver.define_coefficient(0, "x1", 3)
+    Solver.define_coefficient(0, "x2", 4)
+    Solver.define_coefficient(0, "x3", -2)
+    Solver.define_coefficient(0, "x4", 1)  
+
+    Solver.add_convexfunc("x1", 3)
+    Solver.add_convexfunc("x2", 4)
+    Solver.add_convexfunc("x3", 2)
+    Solver.add_convexfunc("x4", -2)
 
     print(Solver.search())
 

@@ -63,7 +63,7 @@ def basis_intker(A):
     if verify_input(A):
         N = A.shape[0]
         A = np.append(A, np.eye(A.shape[1]).astype(np.int32), axis=0)
-        n_deleted = 0
+        n_deleted: int = 0
         for i in range(N):
             if np.all(A[i - n_deleted][i - n_deleted:] == 0):
                 A = np.delete(A , i - n_deleted)
@@ -182,7 +182,7 @@ def graver(basis):
                 for i in range(norm_c - len(C) + 1):
                     C.append(np.empty((0, basis.shape[1]), dtype=np.int32))
             C[norm_c] = np.append(C[norm_c], [c], axis=0)
-        norm = 0
+        norm: int = 0
         while True:
             s = 0
             for norm in range(1, len(C)):
@@ -221,7 +221,7 @@ def graver_original(projected_basis):
         C = np.delete(C, 0, axis=0)
         for g in G:
             if np.all(s == 0):
-                s = 0
+                s: int = 0
                 break
             elif np.all(np.sign(g) * np.sign(s) >= 0):
                 if np.all(np.abs(g) <= np.abs(s)):
@@ -230,8 +230,7 @@ def graver_original(projected_basis):
             for g in G:
                 C = np.append(C, [g + s], axis=0)
             G = np.append(G, [s], axis=0)
-    print(G)
-    
+                
     # 極小元でない元を除く
     G_ = np.empty((0, G.shape[1]), dtype=np.int32)
     minimum = True
@@ -253,7 +252,7 @@ def graver_original(projected_basis):
 
 
 if __name__ == "__main__":
-    A = np.array([[2, -1, 0, -3, 2, -2], [1, 1, -1, 0, 0, 0], [1, 0, 0, 1, -1, 0]], dtype=np.int32)
+    A = np.array([[2, -1, 0, -3, 2, -2], [1, 5, -4, 0, 0, 0]], dtype=np.int32)
     basis = basis_intker(A)
     t = time.time()
     proj_lift = graver(basis)
